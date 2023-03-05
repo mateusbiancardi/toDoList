@@ -1,25 +1,76 @@
-import { ChakraProvider, Checkbox, Container, Flex, Text } from "@chakra-ui/react";
 import '@fontsource/Inter/400.css';
 import '@fontsource/Inter/700.css';
 
 import theme from './theme';
+import {
+    Button,
+    ChakraProvider,
+    Checkbox,
+    Container,
+    Flex,
+    Heading,
+    Input,
+    InputGroup,
+    InputRightAddon,
+    Text
+} from '@chakra-ui/react'
+
+import { DeleteIcon } from '@chakra-ui/icons'
+import { useState } from 'react'
 
 export function ToDoTable () {
+    const [newTodo, setNewTodo] = useState<string>('')
+    const [tasks, setTasks] = useState<{ newTodo: string; concluida: boolean}[]>([])
+
+    //Altera o texto de newTodo
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewTodo(event.target.value)
+    }
+
+    const handleClick = () => {
+        console.log('Enviado')
+        if (newTodo != ''){
+            setTasks([...tasks, {newTodo, concluida: false}])
+        }
+        setNewTodo('');
+    }
+
+    const handleCheckboxChange = (index: number) => {
+        // Inverte o estado de concluída da tarefa
+        setTasks(tasks.map((task, i) => {
+          if (i === index) {
+            return {
+              ...task,
+              concluida: !task.concluida
+            };
+          }
+          return task;
+        }));
+      }
+    
     return (
         <ChakraProvider theme={theme}>
-            <Container w="100%" margin="1rem 0 0 0" padding="0">
+            <Heading fontWeight="700" color="white">TO DO LIST</Heading>
+            <InputGroup margin="1rem 0 0">
+                <Input fontWeight="400" placeholder="Digite a tarefa" color="white" type='text' onChange={handleChange} />
+                <InputRightAddon width='5.5rem' bg="#14191f">
+                    <Button h='1.75rem' bg="#14191f" _hover="#14191f" _active="#14191f" color="white" onClick={handleClick}>
+                        Adicionar
+                    </Button>
+                </InputRightAddon>
+            </InputGroup>
+            
 
-                <Flex margin="0.5rem 0 0 0">
-                    <Checkbox margin="0 0.5rem 0 0"/>
-                    <Text color="white">Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero maiores est itaque nobis unde perferendis voluptate doloribus explicabo, voluptatum esse saepe repellendus quod libero veniam provident cupiditate ad officia. Pariatur.</Text>
-                </Flex>
-
-                <Flex margin="0.5rem 0 0 0">
-                    <Checkbox margin="0 0.5rem 0 0"/>
-                    <Text color="white">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam atque expedita tenetur ducimus consectetur eligendi exercitationem? Obcaecati cum atque laudantium in aperiam ratione minima quo ipsa, quod quisquam quam incidunt!</Text>
-                </Flex>
-                
+            <Container w="100%" margin="1rem 0 0 0" padding="0">    
+                {tasks.map((task, index) => (
+                    <Flex margin="0.5rem 0 0 0">
+                        <Checkbox margin="0 0.5rem 0 0" isChecked={task.concluida} onChange={() => handleCheckboxChange(index)} style={task.concluida ? { textDecoration: 'line-through' } : undefined}>
+                            <Text key={index} color='white'>{task.newTodo}</Text>
+                        </Checkbox>
+                    </Flex>
+                ))}   
             </Container>
+
         </ChakraProvider>
     );
 }
