@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { ToDoTable } from "../components/toDoTable";
 

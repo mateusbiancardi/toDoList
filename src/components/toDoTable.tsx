@@ -1,6 +1,3 @@
-import '@fontsource/Inter/400.css';
-import '@fontsource/Inter/700.css';
-
 import theme from './theme';
 import {
     Button,
