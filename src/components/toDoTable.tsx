@@ -15,12 +15,12 @@ import {
     Text
 } from '@chakra-ui/react'
 
-import { DeleteIcon } from '@chakra-ui/icons'
+import { CloseIcon } from '@chakra-ui/icons'
 import { useState } from 'react'
 
 export function ToDoTable () {
     const [newTodo, setNewTodo] = useState<string>('')
-    const [tasks, setTasks] = useState<{ newTodo: string; concluida: boolean}[]>([])
+    const [tasks, setTasks] = useState<{ newTodo: string; concluida: boolean; delete: boolean}[]>([])
 
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +30,7 @@ export function ToDoTable () {
     const handleClick = () => {
         console.log('Enviado')
         if (newTodo != ''){
-            setTasks([...tasks, {newTodo, concluida: false}])
+            setTasks([...tasks, {newTodo, concluida: false, delete: false}])
         }
         setNewTodo('');
     }
@@ -52,6 +52,16 @@ export function ToDoTable () {
             handleClick()
         }
     }
+
+    const handleDeleteTask = (index: number) => {
+        tasks.splice(index, 1)
+        setTasks(tasks.map((task, i) => {
+            if (i === index) {
+                tasks.splice(index, 1)
+            }
+            return task;
+          }));
+    }
     
     return (
         <ChakraProvider theme={theme}>
@@ -68,10 +78,11 @@ export function ToDoTable () {
 
             <Container w="100%" margin="1rem 0 0 0" padding="0">    
                 {tasks.map((task, index) => (
-                    <Flex margin="0.5rem 0 0 0">
+                    <Flex margin="0.5rem 0 0 0" justifyContent='space-between'>
                         <Checkbox margin="0 0.5rem 0 0" isChecked={task.concluida} onChange={() => handleCheckboxChange(index)} style={task.concluida ? { textDecoration: 'line-through' } : undefined}>
-                            <Text key={index} color='white'>{task.newTodo}</Text>
+                            <Text key={index} color='white'>{task.newTodo}</Text> 
                         </Checkbox>
+                        <CloseIcon color='white' onClick={() => handleDeleteTask(index)} />
                     </Flex>
                 ))}   
             </Container>
