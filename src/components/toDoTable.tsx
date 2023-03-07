@@ -22,7 +22,7 @@ export function ToDoTable () {
     const [newTodo, setNewTodo] = useState<string>('')
     const [tasks, setTasks] = useState<{ newTodo: string; concluida: boolean}[]>([])
 
-    //Altera o texto de newTodo
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewTodo(event.target.value)
     }
@@ -36,7 +36,6 @@ export function ToDoTable () {
     }
 
     const handleCheckboxChange = (index: number) => {
-        // Inverte o estado de concluída da tarefa
         setTasks(tasks.map((task, i) => {
           if (i === index) {
             return {
@@ -46,15 +45,21 @@ export function ToDoTable () {
           }
           return task;
         }));
-      }
+    }
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.code == 'Enter' || event.code == 'NumpadEnter') {
+            handleClick()
+        }
+    }
     
     return (
         <ChakraProvider theme={theme}>
             <Heading fontWeight="700" color="white">TO DO LIST</Heading>
             <InputGroup margin="1rem 0 0">
-                <Input fontWeight="400" placeholder="Digite a tarefa" color="white" type='text' onChange={handleChange} />
+                <Input fontWeight="400" placeholder="Digite a tarefa" color="white" type='text' onChange={handleChange} onKeyDown={handleKeyDown}/>
                 <InputRightAddon width='5.5rem' bg="#14191f">
-                    <Button h='1.75rem' bg="#14191f" _hover="#14191f" _active="#14191f" color="white" onClick={handleClick}>
+                    <Button h='1.75rem' bg="#14191f" _hover={{backgroundColor: "#14191f"}} _active={{backgroundColor: "#14191f"}} color="white" onClick={handleClick}>
                         Adicionar
                     </Button>
                 </InputRightAddon>
