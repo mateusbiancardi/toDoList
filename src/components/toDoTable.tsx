@@ -20,7 +20,7 @@ import { useState } from 'react'
 
 export function ToDoTable () {
     const [newTodo, setNewTodo] = useState<string>('')
-    const [tasks, setTasks] = useState<{ newTodo: string; concluida: boolean; delete: boolean}[]>([])
+    const [tasks, setTasks] = useState<{ newTodo: string; checkmarked: boolean; delete: boolean}[]>([])
 
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +30,7 @@ export function ToDoTable () {
     const handleClick = () => {
         console.log('Enviado')
         if (newTodo != ''){
-            setTasks([...tasks, {newTodo, concluida: false, delete: false}])
+            setTasks([...tasks, {newTodo, checkmarked: false, delete: false}])
         }
         setNewTodo('');
     }
@@ -40,7 +40,7 @@ export function ToDoTable () {
           if (i === index) {
             return {
               ...task,
-              concluida: !task.concluida
+              checkmarked: !task.checkmarked
             };
           }
           return task;
@@ -79,8 +79,8 @@ export function ToDoTable () {
             <Container w="100%" margin="1rem 0 0 0" padding="0">    
                 {tasks.map((task, index) => (
                     <Flex margin="0.5rem 0 0 0" justifyContent='space-between'>
-                        <Checkbox margin="0 0.5rem 0 0" isChecked={task.concluida} onChange={() => handleCheckboxChange(index)} style={task.concluida ? { textDecoration: 'line-through' } : undefined}>
-                            <Text key={index} color='white'>{task.newTodo}</Text> 
+                        <Checkbox margin="0 0.5rem 0 0" isChecked={task.checkmarked} onChange={() => handleCheckboxChange(index)} style={{ textDecoration: task.checkmarked ? 'line-through' : undefined,  color: task.checkmarked ? 'gray' : 'white' }}>
+                            <Text key={index}>{task.newTodo}</Text> 
                         </Checkbox>
                         <CloseIcon color='white' onClick={() => handleDeleteTask(index)} />
                     </Flex>
