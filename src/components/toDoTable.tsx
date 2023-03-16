@@ -12,7 +12,7 @@ import {
     Text
 } from '@chakra-ui/react'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CloseIcon } from '@chakra-ui/icons';
 
 export function ToDoTable() {
@@ -25,6 +25,7 @@ export function ToDoTable() {
     const [tasks, setTasks] = useState<Items[]>([])
     const [filter, setFilter] = useState('Todos')
 
+    
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewTodo(event.target.value)
     }
@@ -57,6 +58,7 @@ export function ToDoTable() {
 
     const handleDeleteTask = (index: number) => {
         setTasks(tasks.filter((task, i) => i !== index))
+        
     }
 
     const handleFilterChange = (filter: string) => {
@@ -87,13 +89,13 @@ export function ToDoTable() {
 
                 <Container margin="1rem 0 0 0" padding="0">
                     <Flex justifyContent='space-between' margin="1rem 0 0">
-                        <Button onClick={() => handleFilterChange('Todos')}>
+                        <Button onClick={() => handleFilterChange('Todos')} bgColor={ filter == 'Todos' ? 'grey' : 'white'}>
                             Todos
                         </Button>
-                        <Button onClick={() => handleFilterChange('Em andamento')}>
+                        <Button onClick={() => handleFilterChange('Em andamento')} bgColor={ filter == 'Em andamento' ? 'grey' : 'white'}>
                             Em Andamento
                         </Button>
-                        <Button onClick={() => handleFilterChange('Completo')}>
+                        <Button onClick={() => handleFilterChange('Completo')} bgColor={ filter == 'Completo' ? 'gray.200' : 'white'}>
                             Concluídas
                         </Button>
                     </ Flex>
