@@ -1,4 +1,4 @@
-import theme from './theme';
+import theme from '../styles/theme';
 import {
     Button,
     ChakraProvider,
@@ -12,13 +12,19 @@ import {
     Text
 } from '@chakra-ui/react'
 
-import { CloseIcon } from '@chakra-ui/icons'
 import { useState } from 'react'
+import { CloseIcon } from '@chakra-ui/icons';
 
 export function ToDoTable () {
-    const [newTodo, setNewTodo] = useState<string>('')
-    const [tasks, setTasks] = useState<{ newTodo: string; checkmarked: boolean; delete: boolean}[]>([])
+    type Items = {
+        newTodo: string,
+        checkmarked: boolean,
+    }
 
+    const [newTodo, setNewTodo] = useState<string>('')
+    const [tasks, setTasks] = useState<Items[]>([])
+    const [filterTasks, setFilterTasks] = useState<Items[]>(tasks)
+    const [filter, setFilter] = useState('Todos')
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewTodo(event.target.value)
@@ -27,7 +33,7 @@ export function ToDoTable () {
     const handleClick = () => {
         console.log('Enviado')
         if (newTodo != ''){
-            setTasks([...tasks, {newTodo, checkmarked: false, delete: false}])
+            setTasks([...tasks, {newTodo, checkmarked: false}])
         }
         setNewTodo('');
     }
@@ -51,18 +57,23 @@ export function ToDoTable () {
     }
 
     const handleDeleteTask = (index: number) => {
-        tasks.splice(index, 1)
-        setTasks(tasks.map((task, i) => {
-            if (i === index) {
-                tasks.splice(index, 1)
-            }
-            return task;
-          }));
+        setTasks(tasks.filter((task, i) => i !== index))
     }
-    
+
+    const handleFilterChange = (filter: string) => {
+        setFilter(filter)
+        //setFilterTasks(handleFilter())
+    }
+
+    /*const handleFilter = () => {
+        return filter == 'Em andamento' ? tasks.filter(task => task.checkmarked) : filter == 'Completo' ? tasks.filter(task => !task.checkmarked) : tasks
+    }*/
+          
     return (
         <ChakraProvider theme={theme}>
-            <Heading fontWeight="700" color="white">TO DO LIST</Heading>
+            <Heading display='flex' fontWeight="700" color="white">
+                TO DO LIST
+            </Heading>
             <InputGroup margin="1rem 0 0">
                 <Input fontWeight="400" placeholder="Digite a tarefa" color="white" type='text' onChange={handleChange} onKeyDown={handleKeyDown}/>
                 <InputRightAddon width='5.5rem' bg="#14191f">
@@ -73,9 +84,20 @@ export function ToDoTable () {
             </InputGroup>
             
 
-            <Container w="100%" margin="1rem 0 0 0" padding="0">    
-                {tasks.map((task, index) => (
-                    <Flex margin="0.5rem 0 0 0" justifyContent='space-between'>
+            <Container w="100%" margin="1rem 0 0 0" padding="0"> 
+                <Flex justifyContent='space-between' margin="1rem 0 0">
+                    <Button onClick={() => handleFilterChange('Todos')}>
+                        Todos
+                    </Button> 
+                    <Button onClick={() => handleFilterChange('Em andamento')}>
+                        Em Andamento
+                    </Button>
+                    <Button onClick={() => handleFilterChange('Completo')}>
+                        Concluídas
+                    </Button>
+                </ Flex>  
+                {(filter == 'Em andamento' ? tasks.filter(task => !task.checkmarked) : filter == 'Completo' ? tasks.filter(task => task.checkmarked) : tasks).map((task, index) => (
+                    <Flex key={index} margin="0.5rem 0 0 0" justifyContent='space-between'>
                         <Checkbox margin="0 0.5rem 0 0" isChecked={task.checkmarked} onChange={() => handleCheckboxChange(index)} style={{ textDecoration: task.checkmarked ? 'line-through' : undefined,  color: task.checkmarked ? 'gray' : 'white' }}>
                             <Text key={index}>{task.newTodo}</Text> 
                         </Checkbox>

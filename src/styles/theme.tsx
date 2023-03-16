@@ -7,6 +7,8 @@ const theme = extendTheme({
     input: `'Inter', sans-serif`,
     button: `'Inter', sans-serif`
   },
+  initialColorMode: 'dark',
+  useSystemColorMode: false
 })
 
 export default theme
